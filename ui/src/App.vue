@@ -1,7 +1,7 @@
 <template>
   <v-app dark>
     <v-toolbar app>
-      <v-toolbar-title>BlockTax</v-toolbar-title>
+      <v-toolbar-title><a href="/">BlockTax</a></v-toolbar-title>
     </v-toolbar>
     <v-container>
       <router-view></router-view>
