@@ -9,13 +9,24 @@ const GdaxPublicClient = new Gdax.PublicClient();
 var SUPPORTED_MARKETS = ["LTCBTC", "BNBBTC", "BTCLTC", "BTCETH", "ETHBTC", "BTCBNB"];
 var SUPPORTED_TRADE_TYPES = ["MARKET", "LIMIT"];
 
-function getBTCUSD(){
-	console.log("Called JMT");
+function getBTCUSD(inputs) {
+	return Math.random() * (9000 - 7000) + 7000;
+}
+
+function getBTC(toGet) {
+	var theMap = {
+		"LTC": { min: 0.0150, max: 0.0159 },
+		"ETH": { min: 0.05, max: 0.07 },
+		"XRP": { min: 0.00007, max: 0.00010 },
+		"BCH": { min: 0.08, max: 0.09 },
+		"BNB": { min: 0.0013, max: 0.0017 }
+	}
+	return Math.random() * (theMap[toGet].max - theMap[toGet].min) + theMap[toGet].min;
 }
 
 function binanceToTransactions(transactions, marketToBaseAsset) {
 	var output = {
-		buys: {}, 
+		buys: {},
 		sells: {}
 	};
 
@@ -26,16 +37,22 @@ function binanceToTransactions(transactions, marketToBaseAsset) {
 		var qtyAquired;
 		var qtySold;
 		var pricePerUnit;
+		var BTCPerUnit;
+		var USDPerUnit;
 		if (transaction.side === "BUY") {
 			buyCoin = marketToBaseAsset[transaction.symbol].quote;
 			sellCoin = marketToBaseAsset[transaction.symbol].base;
 			qtyAquired = transaction.executedQty;
-			qtySold = qtyAquired/transaction.price;
+			qtySold = qtyAquired / transaction.price;
+			BTCPerUnit = getBTC(buyCoin);
+			USDPerUnit = getBTCUSD();
 		} else {
 			sellCoin = marketToBaseAsset[transaction.symbol].quote;
 			buyCoin = marketToBaseAsset[transaction.symbol].base;
 			qtySold = transaction.executedQty
-			qtyAquired = qtySold/transaction.price;
+			qtyAquired = qtySold / transaction.price;
+			BTCPerUnit = getBTC(sellCoin);
+			USDPerUnit = getBTCUSD();
 		}
 
 		if (SUPPORTED_TRADE_TYPES.indexOf(transaction.type) !== -1) {
@@ -46,17 +63,17 @@ function binanceToTransactions(transactions, marketToBaseAsset) {
 				qtyAquired: qtyAquired,
 				qtySold: qtySold,
 				pricePerUnit: transaction.price,
-				BTCPerUnit: null,
-				USDPerUnit: null
+				BTCPerUnit: BTCPerUnit,
+				USDPerUnit: USDPerUnit
 			};
 
-			if(transaction.side === "BUY"){
-				if(output.buys[mappedTransaction.aquired] == null){
+			if (transaction.side === "BUY") {
+				if (output.buys[mappedTransaction.aquired] == null) {
 					output.buys[mappedTransaction.aquired] = [];
 				}
 				output.buys[mappedTransaction.aquired].push(mappedTransaction);
 			} else {
-				if(output.sells[mappedTransaction.sold] == null){
+				if (output.sells[mappedTransaction.sold] == null) {
 					output.sells[mappedTransaction.sold] = [];
 				}
 				output.sells[mappedTransaction.sold].push(mappedTransaction);
@@ -176,7 +193,7 @@ var apiRouter = function (api, marketToBaseAsset) {
 			"apiKey": publicKey,
 			"apiSecret": secretKey
 		});
-		promises.push(Promise.all([binance.depositHistory({'recvWindow': 10000000}), binance.withdrawHistory({'recvWindow': 10000000})]).then(function (responses) {
+		promises.push(Promise.all([binance.depositHistory({ 'recvWindow': 10000000 }), binance.withdrawHistory({ 'recvWindow': 10000000 })]).then(function (responses) {
 			return (new Promise(function (resolve, reject) {
 				var output = depositsToTransactions(responses[0].depositList);
 				output = output.concat(withdrawsToTransactions(responses[1].withdrawList));
@@ -199,12 +216,15 @@ var apiRouter = function (api, marketToBaseAsset) {
 			for (var i = 0; i < currentTransactions.length; i++) {
 				binanceTransactions = binanceTransactions.concat(currentTransactions[i]);
 			}
-		}).then(function(){
+		}).then(function () {
 			var objs = binanceToTransactions(binanceTransactions, marketToBaseAsset);
-			objs.forEach(function(parent){
-				parent.forEach(function(transArray){
-					sortTransactions(transArray);
-				});
+			var buyKeys = Object.keys(objs.buys);
+			var sellKeys = Object.keys(objs.sells);
+			buyKeys.forEach(function (k) {
+				sortTransactions(obj.buys[k]);
+			});
+			sellKeys.forEach(function (k) {
+				sortTransactions(obj.sells[k]);
 			});
 			calculateSummary(objs.buys, objs.sells);
 		})
