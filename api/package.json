@@ -9,10 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "binance-api-node": "^0.7.6",
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
     "http": "0.0.0",
+    "moment": "^2.22.1",
     "signalr-client": "0.0.17"
   }
 }

@@ -75,6 +75,12 @@
                     id="amount"
                     v-model="item.amount"
                   ></v-text-field>
+                  <v-select
+                    :items="['buy','sell']"
+                    v-model="orderType"
+                    label="order type"
+                  >
+                  </v-select>
                   <v-text-field
                     mask="##/##/#### ##:##"
                     name="datetime"

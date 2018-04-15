@@ -1,6 +1,8 @@
 var http = require("http");
 var https = require("https");
 var Binance = require('binance-api-node').default;
+var axios = require('axios')
+var moment = require('moment')
 
 var SUPPORTED_MARKETS = ["LTCBTC", "BNBBTC", "BTCLTC", "BTCETH", "ETHBTC", "BTCBNB"];
 
@@ -39,6 +41,79 @@ function withdrawsToTransactions(withdraws) {
 		}
 	}
 	return output;
+}
+
+function calculateSummary() {
+	let summary = []
+	function writeRowToSummary(buy, sell) {
+		summary.push({
+			buy: buy,
+			sell: sell
+		})
+	}
+
+
+
+	let sells = {
+		"BTC": [
+			{
+				amount: 10
+			}, {
+				amount: 5
+			}
+		]
+	}
+
+	let buys = {
+		"BTC": [
+			{
+				amount: 5
+			},
+			{
+				amount: 5
+			}
+		]
+	}
+
+
+	function deepCopy(obj) {
+		return JSON.parse(JSON.stringify(obj))
+	}
+
+	Object.keys(sells).forEach((coin) => {
+		console.log(coin)
+		while (sells[coin].length > 0 &&
+		// this is FOR DEMO PURPOSES ONLY and should never happen we will need to figure this out later
+		buys[coin].length > 0) {
+			console.log(`buy: ${buys[coin][0].amount} sell: ${sells[coin][0].amount}`)
+			if (buys[coin][0].amount > sells[coin][0].amount) {
+				console.log("buy greater")
+
+				let buyCopy = deepCopy(buys[coin][0])
+				buyCopy.amount = sells[coin][0].amount
+				writeRowToSummary(buyCopy, deepCopy(sells[coin][0]))
+				buys[coin][0].amount -= sells[coin][0].amount
+				sells[coin].shift()
+			} else if (buys[coin][0].amount < sells[coin][0].amount) {
+				console.log("buy less")
+				let sellCopy = deepCopy(sells[coin][0])
+				sellCopy.amount = buys[coin][0].amount
+
+				sells[coin][0].amount -= buys[coin][0].amount
+				console.log(sells[coin][0].amount)
+				writeRowToSummary(deepCopy(buys[coin][0]), sellCopy)
+				buys[coin].shift()
+			} else {
+				console.log("equal")
+
+				writeRowToSummary(deepCopy(buys[coin][0]), deepCopy(sells[coin][0]))
+				sells[coin].shift()
+				buys[coin].shift()
+			}
+		}
+	})
+
+	return summary
 }
 
 var apiRouter = function (api, marketToBaseAsset) {
@@ -83,5 +158,7 @@ var apiRouter = function (api, marketToBaseAsset) {
 		});
 	});
 }
+
+
 
 module.exports = apiRouter;
