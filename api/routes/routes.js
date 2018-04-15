@@ -6,6 +6,26 @@ var moment = require('moment')
 
 var SUPPORTED_MARKETS = ["LTCBTC", "BNBBTC", "BTCLTC", "BTCETH", "ETHBTC", "BTCBNB"];
 
+function getBTCUSD(){
+	
+}
+
+function mapToTransaction(){
+
+}
+
+function sortTransactions(transactions, marketToBaseAsset){
+	transactions.sort(function(a,b){
+		return b - a;
+	})
+	transactions.forEach((transaction) => {
+		if(side === "BUY"){
+			var buyCoin = marketToBaseAsset[transaction.symbol].quote;
+			var sellCoin = marketToBaseAsset[transaction.symbol].base;
+		}
+	})
+}
+
 function depositsToTransactions(deposits) {
 	var output = [];
 	for (var i = 0; i < deposits.length; i++) {
