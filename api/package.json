@@ -15,6 +15,7 @@
     "express": "^4.16.3",
     "http": "0.0.0",
     "moment": "^2.22.1",
-    "signalr-client": "0.0.17"
+    "signalr-client": "0.0.17",
+    "gdax": "*"
   }
 }

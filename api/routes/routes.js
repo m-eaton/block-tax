@@ -9,7 +9,7 @@ const GdaxPublicClient = new Gdax.PublicClient();
 var SUPPORTED_MARKETS = ["LTCBTC", "BNBBTC", "BTCLTC", "BTCETH", "ETHBTC", "BTCBNB"];
 
 function getBTCUSD(){
-	
+	console.log("Called JMT");
 }
 
 function mapToTransaction(){
