@@ -130,8 +130,12 @@ function calculateSummary(buys, sells) {
 	let summary = []
 	function writeRowToSummary(buy, sell) {
 		summary.push({
-			buy: buy,
-			sell: sell
+			"Description": `${buy.qtyAquired} ${buy.aquired}`,
+			"DateAquired": buy.timestamp,
+			"DateSoldDisposed": sell.timestamp,
+			"SalesPriceUsd": sell.USDPerUnit * sell.qtyAquired,
+			"CostBasis": buy.USDPerUnit * buy.qtyAquired,
+			"GainLoss": (sell.USDPerUnit * sell.qtyAquired) - (buy.USDPerUnit * buy.qtyAquired)
 		})
 	}
 
@@ -217,6 +221,13 @@ var apiRouter = function (api, marketToBaseAsset) {
 				binanceTransactions = binanceTransactions.concat(currentTransactions[i]);
 			}
 		}).then(function () {
+
+			if(req.body.trades != null){
+				req.body.trades.forEach(function(thing){
+					binanceTransactions.push(thing);
+				});
+			}
+
 			var objs = binanceToTransactions(binanceTransactions, marketToBaseAsset);
 			var buyKeys = Object.keys(objs.buys);
 			var sellKeys = Object.keys(objs.sells);
@@ -226,7 +237,8 @@ var apiRouter = function (api, marketToBaseAsset) {
 			sellKeys.forEach(function (k) {
 				sortTransactions(obj.sells[k]);
 			});
-			calculateSummary(objs.buys, objs.sells);
+			res.json(calculateSummary(objs.buys, objs.sells));
+			res.end();
 		})
 	});
 }
