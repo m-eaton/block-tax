@@ -10,7 +10,7 @@ import 'vuetify/dist/vuetify.min.css'
 Vue.component('downloadExcel', JsonExcel)
 
 Vue.use(Vuetify, { theme: {
-  primary: '#ee44aa',
+  primary: '#FFDEAD',
   secondary: '#424242',
   accent: '#82B1FF',
   error: '#FF5252',

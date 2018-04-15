@@ -25,7 +25,7 @@
                   </v-card>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn block color="primary" class="mx-0" to="/taxes">Get Started</v-btn>
+                  <v-btn block flat color="primary" class="mx-0" to="/taxes">Get Started</v-btn>
                 </v-card-actions>
               </v-card>
             </v-flex>
@@ -38,5 +38,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  a {
+    color: navajowhite;
+  }
 </style>
