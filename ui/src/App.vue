@@ -8,7 +8,7 @@
     </v-container>
     <v-footer fixed app>
       <v-spacer/>
-      <span>&copy; BlockTax 2018</span>
+      <span>BlockTax 2018</span>
       <v-spacer/>
     </v-footer>
   </v-app>

@@ -4,7 +4,7 @@
       <v-container>
         <v-layout align-center>
           <v-flex>
-            <h3 class="display-2">Crypto taxes are hard</h3>
+            <h3 class="display-1">Crypto taxes are hard</h3>
             <span class="subheading">BlockTax makes them easier</span>
             <v-divider/>
             <v-btn block flat color="primary" class="mx-0" to="/taxes">Get Started</v-btn>
