@@ -21,7 +21,7 @@
                       As an example, we omitted hard forks, airdrops and other zero-base events from our calculations.
                       We also currently only support <a href="https://www.binance.com/">Binance</a> for automatic trade retrieval.
                       If BlockTax is useful for you, please consider donating to its future development.
-                      You can contribute directly to the BlockTag team by sending bitcoin here: <a href="bitcoin:ourbtcaddress">ourbtcaddress</a>.
+                      You can contribute directly to the BlockTag team on <a href="https://commerce.coinbase.com/checkout/4bfbeb11-ec9a-4dfe-a401-c36db8d1c0a9">coinbase</a>.
                     </v-card-text>
                   </v-card>
                 </v-card-text>
