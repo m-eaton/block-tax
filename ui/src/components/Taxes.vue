@@ -8,27 +8,35 @@
       <v-stepper-content step="1">
         <v-card hover color="grey darken-2" class="mb-5">
           <v-card-title class="subheading">
-            BlockTax can automatically grab your previous trades
+            BlockTax can automatically grab your previous trades using an exchange provided api key
           </v-card-title>
           <v-card-text v-if="exchanges.length > 0">
-            <v-list three-line>
-              <template v-for="(item, index) in exchanges">
-                <v-list-tile ripple :key="index" @click="">
-                  <v-list-tile-content>
-                    <v-list-tile-title class="pb-2" v-html="item"></v-list-tile-title>
-                    <v-list-tile-sub-title class="pb-1" v-html="item"></v-list-tile-sub-title>
-                    <v-list-tile-action>
-                      <v-text-field
-                        name="apikey"
-                        label="enter your api key"
-                        id="apikey"
-                      ></v-text-field>
-                    </v-list-tile-action>
-                  </v-list-tile-content>
-                </v-list-tile>
+            <template v-for="(item, index) in exchanges">
+              <v-card hover>
+                <v-card-title class = "subheading">
+                  {{ item.name }}
+                </v-card-title>
+                <v-card-text>
+                  <v-alert outline type="warning" :value="true">
+                    For security, make sure your generated key is read-only
+                  </v-alert>
+                  <v-text-field
+                    name="apikey"
+                    label="enter your api key"
+                    id="apikey"
+                    v-model="item.apiKey"
+                  ></v-text-field>
+                  <v-text-field
+                    name="secretkey"
+                    label="enter your secret key"
+                    id="secretkey"
+                    v-model="item.secretKey"
+                  ></v-text-field>
+                </v-card-text>
                 <v-divider/>
-              </template>
-            </v-list>
+              </v-card>
+              <v-divider/>
+            </template>
           </v-card-text>
           <v-card-actions>
             <v-menu offset-y>
@@ -102,7 +110,7 @@
           label="annual income"
         >
         </v-text-field>
-        <v-btn flat color="primary" @click.native="calculateTaxes()">Continue</v-btn>
+        <v-btn :loading="loadingSummary" flat color="primary" @click.native="calculateTaxes()">Calculate tax summary</v-btn>
         <v-btn flat @click.native="step = 1">Back</v-btn>
       </v-stepper-content>
       <v-stepper-step step="3" :complete="step > 3">
@@ -124,7 +132,7 @@
           <v-card-text>
             <v-data-table
               :headers="headers"
-              :items="ShortTermTransactions"
+              :items="ShortTermTransactionsFormatted"
               class="elevation-1"
             >
               <template slot="items" slot-scope="props">
@@ -141,7 +149,7 @@
             <v-spacer/>
             <download-excel
               class   = ""
-              :data   = "ShortTermTransactions"
+              :data   = "ShortTermTransactionsFormatted"
               :fields = "excelHeaders"
               type    = "csv"
               name    = "short-term-gains.csv"
@@ -161,7 +169,7 @@
           <v-card-text>
             <v-data-table
               :headers="headers"
-              :items="LongTermTransactions"
+              :items="LongTermTransactionsFormatted"
               class="elevation-1"
             >
               <template slot="items" slot-scope="props">
@@ -178,7 +186,7 @@
             <v-spacer/>
             <download-excel
               class   = ""
-              :data   = "LongTermTransactions"
+              :data   = "LongTermTransactionsFormatted"
               :fields = "excelHeaders"
               type    = "csv"
               name    = "long-term-gains.csv"
@@ -194,23 +202,24 @@
 </template>
 
 <script>
-  import VCardTitle from "vuetify/src/components/VCard/VCardTitle";
+  import axios from 'axios'
+  import moment from 'moment'
 
   export default {
-    components: {VCardTitle},
     data () {
       return {
         step: 1,
         exchanges: [],
         trades: [],
-        supportedExchanges: ['bittrex', 'binance'],
+        supportedExchanges: ['binance'],
         maritalStatus: null,
+        loadingSummary: false,
         headers: [
-          { text: 'Description of property (1a)', align: 'left', value: 'Description'},
+          { text: 'Description (1a)', align: 'left', value: 'Description'},
           { text: 'Date acquired (1b)', value: 'DateAcquired' },
-          { text: 'Date sold or disposed of (1c)', value: 'DateSoldDisposed' },
+          { text: 'Date sold (1c)', value: 'DateSoldDisposed' },
           { text: 'Proceeds (1d)', value: 'SalesPriceUsd' },
-          { text: 'Cost or other basis (1e)', value: 'CostBasis' },
+          { text: 'Cost basis (1e)', value: 'CostBasis' },
           { text: 'Gain or loss (1h)', value: 'GainLoss' }
         ],
         excelHeaders: {
@@ -343,23 +352,47 @@
     },
     methods: {
       addExchange: function (exchange) {
-        if (!this.exchanges.includes(exchange)) {
-          this.exchanges.push(exchange)
+        if (!this.exchanges.map((exchange) => { return exchange.name }).includes(exchange)) {
+          this.exchanges.push({name: exchange})
         }
       },
       addTrade: function () {
         this.trades.push({})
       },
       calculateTaxes: function () {
+        this.loadingSummary = true
         new Promise((resolve, reject) => {
           console.log("crunching the numbers...")
-          this.trades.map
-          console.log(this.trades)
-          resolve()
+          /*axios.post("/api/getSummary", {
+            exchanges: this.exchanges,
+            trades: this.trades
+          }).then((res) => {
+            resolve(res)
+          })*/ //TODO
+          setTimeout(function () {
+            resolve()
+          }, 2000)
         }).then(() => {
+          this.loadingSummary = false
           this.step = 3
         }).catch((e) => {
           console.log(e)
+        })
+      }
+    },
+    computed: {
+      ShortTermTransactionsFormatted: function () {
+        return this.ShortTermTransactions.map(function (transaction) {
+          transaction.DateAcquired = moment.unix(transaction.DateAcquired).format("MM,DD,YYYY")
+          transaction.DateSoldDisposed = moment.unix(transaction.DateSoldDisposed).format("MM,DD,YYYY")
+          return transaction
+        })
+      },
+      LongTermTransactionsFormatted: function () {
+        return this.LongTermTransactions.map(function (transaction) {
+          transaction.DateAcquired = moment.unix(transaction.DateAcquired).format("MM,DD,YYYY")
+          transaction.DateSoldDisposed = moment.unix(transaction.DateSoldDisposed).format("MM,DD,YYYY")
+          return transaction
         })
       }
     },
@@ -369,5 +402,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  th {
+    word-wrap: break-word;
+  }
 </style>

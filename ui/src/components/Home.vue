@@ -19,6 +19,7 @@
                       This project was created at the <a href="https://summit.cublockchain.org/">CU Blockchain Summit</a>.
                       As a hackathon project, its scope is purposefully limited, and its results should not used as financial reporting advice.
                       As an example, we omitted hard forks, airdrops and other zero-base events from our calculations.
+                      We also currently only support <a href="https://www.binance.com/">Binance</a> for automatic trade retrieval.
                       If BlockTax is useful for you, please consider donating to its future development.
                       You can contribute directly to the BlockTag team by sending bitcoin here: <a href="bitcoin:ourbtcaddress">ourbtcaddress</a>.
                     </v-card-text>
