@@ -57,36 +57,45 @@
                 <v-card-text>
                   <v-text-field
                     class="pb-2"
-                    name="exchange"
-                    label="exchange"
-                    id="exchange"
-                    v-model="item.exchange"
-                  ></v-text-field>
-                  <v-text-field
-                    name="coin"
-                    label="coin"
-                    id="coin"
-                    v-model="item.coin"
+                    name="acquired"
+                    label="the crypto or fiat you acquired"
+                    id="acquired"
+                    v-model="item.aquired"
                   ></v-text-field>
                   <v-text-field
                     mask="#########################"
-                    name="amount"
-                    label="amount"
-                    id="amount"
-                    v-model="item.amount"
+                    name="qtyAcquired"
+                    label="the amount of crypto or fiat you acquired"
+                    id="qtyAcquired"
+                    v-model="item.qtyAquired"
                   ></v-text-field>
-                  <v-select
-                    :items="['buy','sell']"
-                    v-model="orderType"
-                    label="order type"
-                  >
-                  </v-select>
+                  <v-text-field
+                    class="pb-2"
+                    name="sold"
+                    label="the crypto or fiat you sold"
+                    id="sold"
+                    v-model="item.sold"
+                  ></v-text-field>
+                  <v-text-field
+                    mask="#########################"
+                    name="qtySold"
+                    label="the amount of crypto or fiat you sold"
+                    id="qtySoldAcquired"
+                    v-model="item.qtySold"
+                  ></v-text-field>
+                  <v-text-field
+                    mask="#########################"
+                    name="pricePerUnit"
+                    label="the price per unit of the asset you acquired"
+                    id="pricePerUnit"
+                    v-model="item.pricePerUnit"
+                  ></v-text-field>
                   <v-text-field
                     mask="##/##/#### ##:##"
                     name="datetime"
                     label="datetime (e.g. 06/18/2017 14:30)"
                     id="datetime"
-                    v-model="item.datetime"
+                    v-model="item.timestamp"
                   ></v-text-field>
                 </v-card-text>
                 <v-divider/>
@@ -399,6 +408,12 @@
           transaction.DateAcquired = moment.unix(transaction.DateAcquired).format("MM,DD,YYYY")
           transaction.DateSoldDisposed = moment.unix(transaction.DateSoldDisposed).format("MM,DD,YYYY")
           return transaction
+        })
+      },
+      TradesToPost: function () {
+        return this.trades.map(function (trade) {
+          trade.timestamp = moment(trade.timestamp, "M/D/YYYY H:mm").valueOf()
+          return trade
         })
       }
     },
