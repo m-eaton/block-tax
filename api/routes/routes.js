@@ -176,7 +176,7 @@ var apiRouter = function (api, marketToBaseAsset) {
 			"apiKey": publicKey,
 			"apiSecret": secretKey
 		});
-		promises.push(Promise.all([binance.depositHistory(), binance.withdrawHistory()]).then(function (responses) {
+		promises.push(Promise.all([binance.depositHistory({'recvWindow': 10000000}), binance.withdrawHistory({'recvWindow': 10000000})]).then(function (responses) {
 			return (new Promise(function (resolve, reject) {
 				var output = depositsToTransactions(responses[0].depositList);
 				output = output.concat(withdrawsToTransactions(responses[1].withdrawList));
