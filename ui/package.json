@@ -12,6 +12,7 @@
   "dependencies": {
     "moment": "^2.22.0",
     "vue": "^2.5.2",
+    "vue-json-excel": "^0.2.5",
     "vue-router": "^3.0.1",
     "vuetify": "^1.0.0"
   },

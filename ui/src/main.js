@@ -3,8 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import JsonExcel from 'vue-json-excel'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+
+Vue.component('downloadExcel', JsonExcel)
 
 Vue.use(Vuetify, { theme: {
   primary: '#ee44aa',
