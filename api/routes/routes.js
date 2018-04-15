@@ -40,15 +40,15 @@ function binanceToTransactions(transactions, marketToBaseAsset) {
 		var BTCPerUnit;
 		var USDPerUnit;
 		if (transaction.side === "BUY") {
-			buyCoin = marketToBaseAsset[transaction.symbol].quote;
-			sellCoin = marketToBaseAsset[transaction.symbol].base;
+			buyCoin = marketToBaseAsset[transaction.symbol] != null ? marketToBaseAsset[transaction.symbol].base : "";
+			sellCoin = marketToBaseAsset[transaction.symbol] != null ?  marketToBaseAsset[transaction.symbol].base : "";
 			qtyAquired = transaction.executedQty;
 			qtySold = qtyAquired / transaction.price;
 			BTCPerUnit = getBTC(buyCoin);
 			USDPerUnit = getBTCUSD();
 		} else {
-			sellCoin = marketToBaseAsset[transaction.symbol].quote;
-			buyCoin = marketToBaseAsset[transaction.symbol].base;
+			sellCoin = marketToBaseAsset[transaction.symbol] != null ? marketToBaseAsset[transaction.symbol].quote : "";
+			buyCoin = marketToBaseAsset[transaction.symbol].base != null ? marketToBaseAsset[transaction.symbol].base : "";
 			qtySold = transaction.executedQty
 			qtyAquired = qtySold / transaction.price;
 			BTCPerUnit = getBTC(sellCoin);
