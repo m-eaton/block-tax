@@ -12,8 +12,19 @@ function getBTCUSD(){
 	
 }
 
-function mapToTransaction(){
+function binanceToTransaction(){
+	return{
+		aquired: null,
+		timestamp: null,
+		aquired: null,
+		sold: null,
+		qtyAquired: null,
+		qtySold: null,
+		pricePerUnit: null,
+		BTCPerUnit: null,
+		USDPerUnit: null
 
+	}
 }
 
 function sortTransactions(transactions, marketToBaseAsset){
