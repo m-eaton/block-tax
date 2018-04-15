@@ -7,13 +7,11 @@
       </v-stepper-step>
       <v-stepper-content step="1">
         <v-card hover color="grey darken-2" class="mb-5">
-          <v-card-title primary-title>
-            <div>
-              BlockTax can automatically grab your previous trades<br/>
-            </div>
+          <v-card-title class="subheading">
+            BlockTax can automatically grab your previous trades
           </v-card-title>
-          <v-card-text>
-            <v-list v-if="exchanges.length > 0" three-line>
+          <v-card-text v-if="exchanges.length > 0">
+            <v-list three-line>
               <template v-for="(item, index) in exchanges">
                 <v-list-tile ripple :key="index" @click="">
                   <v-list-tile-content>
@@ -44,8 +42,8 @@
           </v-card-actions>
         </v-card>
         <v-card hover color="grey darken-2" class="mb-5">
-          <v-card-title>You can also input your trades manually</v-card-title>
-          <v-card-text>
+          <v-card-title class="subheading">You can also input your trades manually</v-card-title>
+          <v-card-text v-if="trades.length > 0">
             <template v-for="(item, index) in trades">
               <v-card hover>
                 <v-card-text>
@@ -85,7 +83,7 @@
             <v-btn color="secondary" @click="addTrade">add trade</v-btn>
           </v-card-actions>
         </v-card>
-        <v-btn color="primary" @click.native="step = 2">Continue</v-btn>
+        <v-btn flat color="primary" @click.native="step = 2">Continue</v-btn>
         <v-btn flat to="/">Cancel</v-btn>
       </v-stepper-content>
       <v-stepper-step step="2" :complete="step > 2">
@@ -104,7 +102,7 @@
           label="annual income"
         >
         </v-text-field>
-        <v-btn color="primary" @click.native="calculateTaxes()">Continue</v-btn>
+        <v-btn flat color="primary" @click.native="calculateTaxes()">Continue</v-btn>
         <v-btn flat @click.native="step = 1">Back</v-btn>
       </v-stepper-content>
       <v-stepper-step step="3" :complete="step > 3">
