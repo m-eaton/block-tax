@@ -3,6 +3,8 @@ var https = require("https");
 var Binance = require('binance-api-node').default;
 var axios = require('axios')
 var moment = require('moment')
+const Gdax = require('gdax');
+const GdaxPublicClient = new Gdax.PublicClient();
 
 var SUPPORTED_MARKETS = ["LTCBTC", "BNBBTC", "BTCLTC", "BTCETH", "ETHBTC", "BTCBNB"];
 
